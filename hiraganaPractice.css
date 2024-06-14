@@ -1,0 +1,17 @@
+#pb {
+    display: none;
+    background-color: lightgray;
+    border: 10px;
+    border-color: black;
+    width: 60%;
+    align-self: center;
+}
+#rb {
+    display:none;
+}
+#textinput {
+    display: block;
+}
+#multichoiceinput {
+    display: block;
+}

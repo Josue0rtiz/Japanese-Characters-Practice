@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<script src="hiraganaPractice.js"></script>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hiragana Practice</title>
+        <link rel="stylesheet" href="hiraganaPractice.css">
+    </head>
+    <body>
+        <div id="pagetitle">
+            <h1>Hiragana Practice</h1>
+        </div>
+
+        <button id="start" onclick="start()">start</button>
+
+        <div id="pb">
+            <progress id="progress" max="10" value="8"></progress><br>
+            <label id="question"></label><br>
+            <div id="textinput">
+                <input id="userinput" type="text">
+            </div>
+            <div id="multichoiceinput">
+                <input name="mc" value="1" id="option1" class="rin" type="radio"><label for="option1" id="label1"></label><br>
+                <input name="mc" value="2" id="option2" class="rin" type="radio"><label for="option2" id="label2"></label><br>
+                <input name="mc" value="3" id="option3" class="rin" type="radio"><label for="option3" id="label3"></label><br>
+                <input name="mc" value="4" id="option4" class="rin" type="radio"><label for="option4" id="label4"></label><br>
+                
+            </div>
+            <button id="check" onclick="check()">Check Answer</button>
+            <button id="next" onclick="next()" disabled>Next</button>
+        </div>
+        <div id="rb">
+            <h3 id="score">8/10</h3>
+            
+            <button id="tryagain" onclick="start()">tryagain</button>
+        </div>
+    </body>
+</html>
