@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<script src="hiraganaPractice.js"></script>
+
 <html>
     <head>
         <meta charset="utf-8">
@@ -11,12 +11,23 @@
         <div id="pagetitle">
             <h1>Hiragana Practice</h1>
         </div>
-
-        <button id="start" onclick="start()">start</button>
-
+        <div>
+            <menu>
+                <a href="index.html">Home</a>
+                <a href="hiraganaPractice.html">Hiragana Practice</a>
+            </menu>
+        </div>
+        <div id="sb">
+            <input id="questionamount" value="10" type="number" min="5" max="50">
+            <button id="start" onclick="start()">start</button>
+        </div>
         <div id="pb">
             <progress id="progress" max="10" value="8"></progress><br>
-            <label id="question"></label><br>
+            <label id="problem">
+                <h3>
+                    <div id="question"></div><div id="errormessage"> *Please Type Answer</div>
+                </h3>
+            </label><br>
             <div id="textinput">
                 <input id="userinput" type="text">
             </div>
@@ -31,9 +42,11 @@
             <button id="next" onclick="next()" disabled>Next</button>
         </div>
         <div id="rb">
-            <h3 id="score">8/10</h3>
-            
-            <button id="tryagain" onclick="start()">tryagain</button>
+            <h3 id="score"></h3>
+            <div id="answers"></div>
+            <button id="tryagain" onclick="start()">Try Again</button>
+            <button id="goback" onclick="goback()">Go Back</button>
         </div>
     </body>
 </html>
+<script src="hiraganaPractice.js"></script>
