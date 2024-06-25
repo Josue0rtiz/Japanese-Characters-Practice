@@ -5,8 +5,35 @@ const questions = [];
 let qplace = 0;
 const questionstates = []
 let qright = 0
+document.getElementById("userinput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("check").click();
+        console.log("enter was pressed");
+    }
+});
+document.getElementById("multichoiceinput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("check").click();
+        console.log("enter was pressed");
+    }
+});
 
-function start(){
+document.getElementById("questionamount").addEventListener("change", function(event){
+    const x = document.getElementById("questionamount");
+    if (x.value > 50) {
+        x.value = 50;
+    }
+    if (x.value < 5) {
+        x.value = 5;
+    }
+    qamount = x.value;
+});
+function start(){ 
+    qplace = 0;
+    qright = 0;
+    const q = [];
     for (let i = 0; i<qamount; i++) {
         const x = Math.floor(Math.random() * hiraganacharacters.length);
         if (Math.floor(Math.random() * 2) == 0){
@@ -16,8 +43,26 @@ function start(){
         }
         questionstates[i] = "empty";
     }
-    console.log(questions[0][0], "*", questions[1][0], "*", questions[2][0], "*", questions[3][0], "*", questions[4][0], "*", questions[5][0], "*", questions[6][0], "*",questions[7][0], "*",questions[8][0], "*",questions[9][0]);
-    document.getElementById("start").style.display = "none";
+
+    for (let i = 0; i < qamount; i++) {
+        while (true) {
+            const x = Math.floor(Math.random() * hiraganacharacters.length);
+            if (!(q.includes(x))){
+                q[i] = x;
+                break
+            }
+        }
+        console.log(q[i])
+        if (Math.floor(Math.random() * 2) == 0){
+            questions[i]= [hiraganacharacters[q[i]], alphabetpair[q[i]]];
+        } else {
+            questions[i]= [alphabetpair[q[i]], hiraganacharacters[q[i]]];
+        }
+        questionstates[i] = "empty";
+        console.log(`${questions[i][0]}, `)
+    }
+    
+    document.getElementById("sb").style.display = "none";
     document.getElementById("pb").style.display = "block";
     document.getElementById("rb").style.display = "none";
     document.getElementById("progress").max = qamount;
@@ -29,6 +74,16 @@ function finish(){
     document.getElementById("pb").style.display = "none";
     document.getElementById("rb").style.display = "block";
     document.getElementById("score").innerText = `${qright}/${qamount}`
+    let ac = "";
+    console.log(questionstates)
+    for (let i = 0; i < questionstates.length; i++) {
+        const x = questionstates[i];
+        ac = `${ac} <div id="answerstate${i+1}">${function(){if (questionstates[i] == "correct") {return "Correct";} else {return "Incorrect";}}()}: ${questions[i][0]} -> ${questions[i][1]}</div>`
+    
+    
+    }
+    console.log(ac);
+    document.getElementById("answers").innerHTML = ac;
 }
 function setinput(ans){
     const a = alphabetpair;
@@ -72,45 +127,58 @@ function setinput(ans){
 function check() {
     let userinput;
     console.log("check was pressed")
+    const l = document.getElementById("errormessage");
     if (alphabetpair.includes(questions[qplace][1])){
+        console.log("checked for text input");
         if (document.getElementById("userinput").value != ""){
             userinput = document.getElementById("userinput");
+            l.style.display = "none";
         } else {
-            const l = document.getElementById("question").value;
             console.log("big pp");
-            console.log(l);
-            document.getElementById("question").value = l + " *Please Type Answer";
-            return
+            l.innerText = " *Please Type Answer";
+            l.style.display = "block";
+            return;
         }
     } else {
+        console.log("checked for radio input")
         if (function(){
+            console.log("passed through function");
             for (let i = 0; i < 4; i++) {
                 const radin = document.getElementsByClassName("rin")[i];
-                if (radin.checked = true) {return (true)}
+                if (radin.checked === true) {console.log(i,"true"); return (true);}
+                console.log(i,"false")
             }
-            return (false)
-            }){
+            return (false);
+            }()){
             userinput = document.querySelector("input.rin:checked");
+            console.log("assigned to rin");
+            l.style.display = "none";
         } else {
-            const l = document.getElementById("question").value;
             console.log("smol pp");
-            console.log(l);
-            document.getElementById("question").value = l + " *Please Choose Answer";
-            return
+            l.innerText = " *Please Choose Answer";
+            l.style.display = "block";
+            return;
         }
     }
     console.log(`selected: ${userinput.value}`);
     document.getElementById("check").disabled = false;
-    if (userinput.value == questions[qplace][1]) {
+    if (userinput.value.toLowerCase() == questions[qplace][1]) {
         document.getElementById("pb").style.backgroundColor = "lightgreen";
-        console.log("correct")
-        qright++
+        console.log("correct");
+        qright++;
+        questionstates[qplace] = "correct";
     } else {
         document.getElementById("pb").style.backgroundColor = "rgb(255, 111, 111)";
-        console.log("incorrect")
+        console.log("incorrect");
+        questionstates[qplace] = "incorrect";
     }
-    document.getElementById("check").disabled = true
-    document.getElementById("next").disabled = false
+    document.getElementById("check").disabled = true;
+    document.getElementById("next").disabled = false;
+    document.getElementById("userinput").disabled = true;
+    for (let index = 0; index < document.getElementsByName("mc").length; index++) {
+        const i = document.getElementsByName("mc")[index];
+        i.disabled = true;
+    }
 }
 
 function next(){
@@ -123,10 +191,21 @@ function next(){
     labelElement.innerText = `${qplace+1}. ${questions[qplace][0]}`;
     setinput(questions[qplace][1]);
 
-    document.getElementById("check").disabled = false
-    document.getElementById("next").disabled = true
-    document.getElementById("pb").style.backgroundColor = "lightgrey"
-    document.getElementById("progress").value = qplace;
+    document.getElementById("check").disabled = false;
+    document.getElementById("next").disabled = true;
+    document.getElementById("userinput").disabled = false;
+    for (let index = 0; index < document.getElementsByName("mc").length; index++) {
+        const i = document.getElementsByName("mc")[index];
+        i.disabled = false;
+    }
+    for (const i in document.getElementsByName("mc")) {
+        i.disabled = false;
+    }
+    document.getElementById("pb").style.backgroundColor = "lightgrey";
+    document.getElementById("progress").value = qplace;;
 }
-/*  let answer;
-    answer = document.querySelector("input[name='mc']:checked").value;*/
+function goback() {
+    document.getElementById("sb").style.display = "block";
+    document.getElementById("pb").style.display = "none";
+    document.getElementById("rb").style.display = "none";
+}
